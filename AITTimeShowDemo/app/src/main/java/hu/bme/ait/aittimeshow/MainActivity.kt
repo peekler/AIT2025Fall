@@ -2,6 +2,9 @@ package hu.bme.ait.aittimeshow
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -29,20 +32,58 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnShow.setOnClickListener {
-            //var numA = binding.etNumA.text.toString().toInt()
-            //var numB = binding.etNumA.text.toString().toInt()
-            //var sum = numA+numB
+            var a = 5/0
 
-            var currTime = Date(System.currentTimeMillis()).toString()
+            Log.d("TAG_MAIN","btnShow was pressed $a")
 
-            Toast.makeText(
-                this, "Time: $currTime", Toast.LENGTH_LONG).show()
+            try {
+                if (binding.etNumA.text.isNotEmpty()) {
+                    var numA = binding.etNumA.text.toString().toInt()
+                    var numB = binding.etNumA.text.toString().toInt()
+                    var sum = numA + numB
 
-            binding.tvData.text = currTime
+                    Log.d("TAG_MAIN","sum: $sum")
 
-            //binding.root.setBackgroundColor(Color.BLUE)
+                    var currTime = Date(System.currentTimeMillis()).toString()
 
+                    Toast.makeText(
+                        this, "Time: $currTime", Toast.LENGTH_LONG
+                    ).show()
+
+                    binding.tvData.text = currTime
+
+                    //binding.root.setBackgroundColor(Color.BLUE)
+                    revealCard()
+                } else {
+                    binding.etNumA.error = getString(R.string.text_empty)
+                }
+            } catch (e: Exception) {
+                binding.etNumA.error = "Error: ${e.message}"
+            }
         }
-
     }
+
+    fun revealCard() {
+        val x = binding.cardView.getRight()
+        val y = binding.cardView.getBottom()
+
+        val startRadius = 0
+        val endRadius = Math.hypot(binding.cardView.getWidth().toDouble(),
+            binding.cardView.getHeight().toDouble()).toInt()
+
+        val anim = ViewAnimationUtils.createCircularReveal(
+            binding.cardView,
+            x,
+            y,
+            startRadius.toFloat(),
+            endRadius.toFloat()
+        )
+        anim.setDuration(5000)
+
+        binding.cardView.setVisibility(View.VISIBLE)
+        anim.start()
+    }
+
+
+
 }
