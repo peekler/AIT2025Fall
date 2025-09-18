@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "hu.bme.ait.composehelloworld"
-    compileSdk = 36
+    namespace = "hu.ait.composebasiclayoutdemos"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "hu.bme.ait.composehelloworld"
+        applicationId = "hu.ait.composebasiclayoutdemos"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -56,8 +56,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 }
