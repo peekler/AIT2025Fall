@@ -7,8 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,15 +21,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
+import hu.bme.ait.tictactoe.ui.screen.TicTacToeScreen
 import hu.bme.ait.tictactoe.ui.theme.TicTactoeTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,20 +49,30 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TicTacToeScreen(modifier: Modifier) {
+fun TicTacToeScreenOld(modifier: Modifier) {
     var circleX by rememberSaveable { mutableStateOf(0f) }
     var circleY by rememberSaveable { mutableStateOf(0f) }
 
+    var points by rememberSaveable {
+        mutableStateOf<List<Offset>>(emptyList()) }
+
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()
+        Canvas(modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .aspectRatio(1f)
             .pointerInput(key1 = Unit) {
                 detectTapGestures {
                     offset ->
                         Log.d("TAG_CLICK_POS", "${offset.x} ${offset.y}")
                         circleX = offset.x
                         circleY = offset.y
+
+                        // append the new coordinate to the list
+                        points = points + offset
                 }
             }
         )
@@ -66,7 +82,7 @@ fun TicTacToeScreen(modifier: Modifier) {
 
             drawRect(
                 color = Color.Red,
-                size = size / 2f
+                size = size
             )
 
             drawCircle(
@@ -76,6 +92,15 @@ fun TicTacToeScreen(modifier: Modifier) {
                 center = Offset(circleX,
                     if (circleY > canvasHeight) canvasHeight else circleY)
             )
+
+            points.forEach {
+                drawCircle(
+                    Color.Cyan,
+                    radius = 100f,
+                    style = Fill,
+                    center = it
+                )
+            }
 
         }
     }
