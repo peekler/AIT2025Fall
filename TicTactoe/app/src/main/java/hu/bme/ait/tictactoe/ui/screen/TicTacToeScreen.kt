@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -36,9 +37,20 @@ fun TicTacToeScreen(
     ) {
         Text("Welcome in TicTacToe", fontSize = 30.sp)
 
-        TicTacToeBoard()
+        /*TicTacToeBoard(ticTactToeViewModel.board,
+            {
+                ticTactToeViewModel.onCellClicked(it)
+            }
+        )*/
 
-        Button(onClick = {}) {
+        TicTacToeBoard(ticTactToeViewModel.board) {
+            ticTactToeViewModel.onCellClicked(it)
+        }
+
+
+        Button(onClick = {
+            ticTactToeViewModel.setNewBoard(3)
+        }) {
             Text("Restart")
         }
     }
@@ -47,19 +59,23 @@ fun TicTacToeScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TicTacToeBoard(
+    board: Array<Array<Player?>>,
+    onCellClicked: (BoardCell) -> Unit
 ) {
     var canvasSize by remember { mutableStateOf(Size.Zero) }
 
-    //val cellSize = 100.dp
     Canvas(
         modifier = Modifier
             .fillMaxSize(0.5f)
-            //.size(cellSize * 3)
+            .aspectRatio(1.0f)
             .pointerInput(key1 = Unit) {
                 detectTapGestures {
-                    val cellX = (it.x / (canvasSize.width/3)).toInt()
-                    val cellY = (it.y / (canvasSize.height/3)).toInt()
+                    val cellX = (it.x / (canvasSize.width / 3)).toInt()
+                    val cellY = (it.y / (canvasSize.height / 3)).toInt()
 
+                    onCellClicked(
+                        BoardCell(cellY, cellX)
+                    )
                 }
             }
     ) {
@@ -88,6 +104,53 @@ fun TicTacToeBoard(
                 end = androidx.compose.ui.geometry.Offset(gridSize, thirdSize * i),
             )
         }
+
+        // Draw players.. X and O
+        for (row in 0..2) {
+            for (col in 0..2) {
+                val player = board[row][col]
+                if (player != null) {
+                    val centerX = col * thirdSize + thirdSize / 2
+                    val centerY = row * thirdSize + thirdSize / 2
+                    if (player == Player.X) {
+                        drawLine(
+                            color = Color.Black,
+                            strokeWidth = 8f,
+                            pathEffect = PathEffect.cornerPathEffect(4f),
+                            start = androidx.compose.ui.geometry.Offset(
+                                centerX - thirdSize / 4,
+                                centerY - thirdSize / 4
+                            ),
+                            end = androidx.compose.ui.geometry.Offset(
+                                centerX + thirdSize / 4,
+                                centerY + thirdSize / 4
+                            ),
+                        )
+                        drawLine(
+                            color = Color.Black,
+                            strokeWidth = 8f,
+                            pathEffect = PathEffect.cornerPathEffect(4f),
+                            start = androidx.compose.ui.geometry.Offset(
+                                centerX + thirdSize / 4,
+                                centerY - thirdSize / 4
+                            ),
+                            end = androidx.compose.ui.geometry.Offset(
+                                centerX - thirdSize / 4,
+                                centerY + thirdSize / 4
+                            ),
+                        )
+                    } else {
+                        drawCircle(
+                            color = Color.Black,
+                            style = Stroke(width = 8f),
+                            center = androidx.compose.ui.geometry.Offset(centerX, centerY),
+                            radius = thirdSize / 4,
+                        )
+                    }
+                }
+            }
+        }
+
 
     }
 }
