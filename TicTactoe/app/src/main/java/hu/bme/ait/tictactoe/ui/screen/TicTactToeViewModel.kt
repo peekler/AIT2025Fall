@@ -34,11 +34,15 @@ class TicTactToeViewModel : ViewModel() {
         // if the cell is empty and the game is not finished
         if (board[cell.row][cell.col] != null || winner != null) return
 
-        //board[cell.row][cell.col] = currentPlayer
+        board[cell.row][cell.col] = currentPlayer
 
-        val newBoard = board.copyOf()
+        // we do not need this because currentPlayer is also a state and it is
+        // used in TicTacToeScreen so it gets recomposed when the currentPlayer is changed
+        // and it recomposes the TicTacToeBoard as well as it is part of TicTacToeScreen
+
+        /*val newBoard = board.copyOf()
         newBoard[cell.row][cell.col] = currentPlayer
-        board = newBoard
+        board = newBoard*/
 
         currentPlayer =
             if (currentPlayer == Player.X) Player.O else Player.X
