@@ -12,7 +12,14 @@ composeBom = "2025.09.00"
 nav3Core = "1.0.0-alpha09"
 lifecycleViewmodelNav3 = "1.0.0-alpha04"
 
+zoomable="2.1.0"
+flippable = "1.5.4"
+
 [libraries]
+flippable = {group="com.wajahatkarim", name = "flippable", version.ref = "flippable"}
+
+zoomable = {module = "net.engawapg.lib:zoomable", version.ref = "zoomable"}
+
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 # Optional add-on libraries
