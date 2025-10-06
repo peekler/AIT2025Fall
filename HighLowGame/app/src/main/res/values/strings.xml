@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HighLowGame</string>
+    <string name="text_congrat">Congratulations</string>
+    <string name="text_win">You have won!</string>
+    <string name="btn_ok">Ok</string>
+    <string name="btn_cancel">Cancel</string>
 </resources>
