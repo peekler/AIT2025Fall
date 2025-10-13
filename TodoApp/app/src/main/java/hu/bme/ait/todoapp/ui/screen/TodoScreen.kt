@@ -1,5 +1,8 @@
 package hu.bme.ait.todoapp.ui.screen
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +38,8 @@ import hu.bme.ait.todoapp.data.TodoItem
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -48,6 +52,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import hu.bme.ait.todoapp.data.TodoPriority
 import java.util.Date
@@ -55,9 +63,12 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(
+    onSummaryClick: (Int, Int)->Unit,
     todoViewModel: TodoViewModel = viewModel()
 ) {
     var showTodoDialog by rememberSaveable { mutableStateOf(false) }
+    var todoToEdit: TodoItem? by rememberSaveable { mutableStateOf(null) }
+
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -71,6 +82,20 @@ fun TodoScreen(
             ),
             actions = {
                 IconButton(onClick = {
+                    onSummaryClick(
+                        todoViewModel.getAllTodoNum(),
+                        todoViewModel.getImportantTodoNum()
+                    )
+                }) {
+                    Icon(Icons.Filled.Info, null)
+                }
+                IconButton(onClick = {
+
+                    todoViewModel.removeAllTodos()
+                }) {
+                    Icon(Icons.Filled.Delete, null)
+                }
+                IconButton(onClick = {
                     showTodoDialog = true
                 }) {
                     Icon(Icons.Filled.AddCircle, null)
@@ -81,9 +106,10 @@ fun TodoScreen(
         if (showTodoDialog) {
             TodoDialog(
                 todoViewModel,
-                null,
+                todoToEdit,
                 onCancel = {
                     showTodoDialog = false
+                    todoToEdit = null
                 }
             )
         }
@@ -102,7 +128,17 @@ fun TodoScreen(
         } else {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(todoViewModel.getAllToDoList()) { todoItem ->
-                    TodoCard(todoItem)
+                    TodoCard(
+                        todoItem,
+                        onTodoDelete = { todoItem -> todoViewModel.removeTodoItem(todoItem) },
+                        onTodoChecked = { todoItem, checked ->
+                            todoViewModel.changeTodoState(todoItem, checked)
+                        },
+                        onTodoEdit = { selectedTodo ->
+                            todoToEdit = selectedTodo
+                            showTodoDialog = true
+                        }
+                    )
                 }
             }
         }
@@ -111,7 +147,10 @@ fun TodoScreen(
 
 @Composable
 fun TodoCard(
-    todoItem: TodoItem
+    todoItem: TodoItem,
+    onTodoDelete: (TodoItem) -> Unit,
+    onTodoChecked: (TodoItem, Boolean) -> Unit,
+    onTodoEdit: (TodoItem) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -123,47 +162,99 @@ fun TodoCard(
         ),
         modifier = Modifier.padding(5.dp)
     ) {
-        Row(
+        var expanded by remember { mutableStateOf(false) }
+
+        Column(
+            //modifier = Modifier.padding(20.dp).animateContentSize()
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy, // controls "elasticity"
+                        stiffness = Spring.StiffnessLow // lower = slower, more bounce
+                    )
+                )
+
         ) {
-            Image(
-                painter = painterResource(id = todoItem.priority.getIcon()),
-                contentDescription = "Priority",
+
+            Row(
                 modifier = Modifier
-                    .size(40.dp)
-                    .padding(end = 10.dp)
-            )
+                    .padding(20.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = todoItem.priority.getIcon()),
+                    contentDescription = "Priority",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(end = 10.dp)
+                )
 
-            Text(todoItem.title, modifier = Modifier.fillMaxWidth(0.2f))
-            Spacer(modifier = Modifier.fillMaxSize(0.55f))
-            Checkbox(
-                checked = todoItem.isDone,
-                onCheckedChange = { }
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "Delete",
-                modifier = Modifier.clickable {
+                Text(
+                    todoItem.title,
+                    modifier = Modifier.fillMaxWidth(0.2f),
+                    style = if (todoItem.isDone) {
+                        TextStyle(
+                            textDecoration = TextDecoration.LineThrough
+                        )
+                    } else {
+                        TextStyle(
+                            textDecoration = TextDecoration.None
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.fillMaxSize(0.35f))
+                Checkbox(
+                    checked = todoItem.isDone,
+                    onCheckedChange = { checkboxState ->
+                        onTodoChecked(todoItem, checkboxState)
+                    }
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete",
+                    modifier = Modifier.clickable {
+                        onTodoDelete(todoItem)
+                    },
+                    tint = Color.Red
+                )
+                Icon(
+                    imageVector = Icons.Filled.Build,
+                    contentDescription = "Edit",
+                    modifier = Modifier.clickable {
+                        onTodoEdit(todoItem)
+                    },
+                    tint = Color.Blue
+                )
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.KeyboardArrowUp
+                        else Icons.Filled.KeyboardArrowDown,
+                        contentDescription = if (expanded) {
+                            "Less"
+                        } else {
+                            "More"
+                        }
+                    )
+                }
+            }
 
-                },
-                tint = Color.Red
-            )
-            Icon(
-                imageVector = Icons.Filled.Build,
-                contentDescription = "Edit",
-                modifier = Modifier.clickable {
+            if (expanded) {
+                Text(
+                    text = todoItem.description,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = todoItem.createDate,
+                    fontSize = 12.sp
+                )
+            }
 
-                },
-                tint = Color.Blue
-            )
         }
     }
 }
-
 
 
 @Composable
@@ -250,7 +341,10 @@ fun TodoDialog(
                                 description = todoDesc,
                                 priority = if (important) TodoPriority.HIGH else TodoPriority.NORMAL
                             )
-                            //viewModel.update...
+                            viewModel.updateTodo(
+                                todoToEdit,
+                                editedTodo
+                            )
                         }
 
                         onCancel()

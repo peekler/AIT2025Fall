@@ -11,13 +11,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.rememberSceneSetupNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import hu.bme.ait.todoapp.ui.navigation.SummaryScreenRoute
 import hu.bme.ait.todoapp.ui.navigation.TodoScreenRoute
+import hu.bme.ait.todoapp.ui.screen.SummaryScreen
+import hu.bme.ait.todoapp.ui.screen.SummaryViewModel
 import hu.bme.ait.todoapp.ui.screen.TodoScreen
 import hu.bme.ait.todoapp.ui.theme.TodoAppTheme
 
@@ -43,7 +47,7 @@ fun NavGraph(modifier: Modifier) {
     val backStack = rememberNavBackStack(TodoScreenRoute)
 
     NavDisplay(
-        modifier = modifier,
+        //modifier = modifier,
         backStack = backStack,
         onBack = {backStack.removeLastOrNull()},
         entryDecorators = listOf(
@@ -53,7 +57,20 @@ fun NavGraph(modifier: Modifier) {
         ),
         entryProvider  = entryProvider {
             entry<TodoScreenRoute> {
-                TodoScreen()
+                TodoScreen(
+                    onSummaryClick = {
+                        allTodo, importantTodo ->
+                            backStack.add(SummaryScreenRoute(
+                            allTodo, importantTodo))
+                    }
+                )
+            }
+            entry<SummaryScreenRoute> {
+                SummaryScreen(
+                    summaryViewModel = viewModel(
+                        factory = SummaryViewModel.Factory(it)
+                    )
+                )
             }
         }
     )

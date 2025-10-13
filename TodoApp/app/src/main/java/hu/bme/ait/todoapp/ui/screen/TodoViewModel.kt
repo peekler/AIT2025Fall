@@ -23,6 +23,16 @@ class TodoViewModel : ViewModel() {
         )
     }
 
+    fun getAllTodoNum() : Int {
+        return _todoList.size
+    }
+
+    fun getImportantTodoNum() : Int {
+        return _todoList.count {
+            it.priority == TodoPriority.HIGH
+        }
+    }
+
     fun getAllToDoList(): List<TodoItem> {
         return _todoList;
     }
@@ -33,6 +43,15 @@ class TodoViewModel : ViewModel() {
 
     fun removeTodoItem(todoItem: TodoItem) {
         _todoList.remove(todoItem)
+    }
+
+    fun removeAllTodos() {
+        _todoList.clear()
+    }
+
+    fun updateTodo(originalTodoItem: TodoItem, newTodoItem: TodoItem) {
+        val index = _todoList.indexOf(originalTodoItem)
+        _todoList[index] = newTodoItem
     }
 
     fun changeTodoState(todoItem: TodoItem, value: Boolean) {
