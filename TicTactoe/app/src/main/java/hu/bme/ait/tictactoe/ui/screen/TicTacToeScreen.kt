@@ -64,7 +64,7 @@ fun TicTacToeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Flippable(
+        /*Flippable(
             frontSide = {
                 Card(
                     modifier = Modifier
@@ -112,7 +112,7 @@ fun TicTacToeScreen(
                 }
             },
             flipController = rememberFlipController()
-        )
+        )*/
 
 
 
@@ -122,7 +122,7 @@ fun TicTacToeScreen(
                 R.string.next_player_text,
                 ticTactToeViewModel.currentPlayer
             ),
-            fontSize = 28.sp
+            fontSize = 28.sp,
         )
 
         /*TicTacToeBoard(ticTactToeViewModel.board,

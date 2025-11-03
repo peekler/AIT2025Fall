@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 
     @Composable
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
             entryProvider = entryProvider {
                 entry<HomeScreenRoute> {
                     HomeScreen(onStartClicked = {
-                        backStack.add(GameScreenRoute(100))
+                        backStack.add(GameScreenRoute(5))
                     })
                 }
                 entry<GameScreenRoute> {
