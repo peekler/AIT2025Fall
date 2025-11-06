@@ -17,8 +17,8 @@ class GradeViewModel @Inject constructor(
     private val gradeDAO: GradeDAO
 ) : ViewModel() {
     fun getAllGrades(): Flow<List<Grade>> {
-        return gradeDAO.getSpecialGrades("A+")
-        //return gradeDAO.getAllGrades()
+        //return gradeDAO.getSpecialGrades("A+")
+        return gradeDAO.getAllGrades()
     }
 
     fun deleteAllGrades() {
