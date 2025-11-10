@@ -1,4 +1,4 @@
-package hu.bme.ait.aitforum.ui.screen
+package hu.bme.ait.aitforum.ui.screen.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,16 +31,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = viewModel(),
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+    onLoginSuccess: () -> Unit
+    ) {
 
     var showPassword by rememberSaveable { mutableStateOf(false) }
     var email by rememberSaveable { mutableStateOf("demo@ait.hu") }
     var password by rememberSaveable { mutableStateOf("123456") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Box() {
         Text(
@@ -98,7 +104,12 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 OutlinedButton(onClick = {
-
+                    coroutineScope.launch {
+                        val result = viewModel.loginUser(email,password)
+                        if (result?.user != null) {
+                            onLoginSuccess()
+                        }
+                    }
                 }) {
                     Text(text = "Login")
                 }
