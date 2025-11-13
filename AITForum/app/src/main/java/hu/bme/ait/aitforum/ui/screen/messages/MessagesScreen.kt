@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.bme.ait.aitforum.data.Post
 
 import androidx.compose.foundation.lazy.items
+import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -158,6 +159,15 @@ fun PostCard(
                     }
                 }
             }
+
+            if (post.imgUrl != "") {
+                AsyncImage(
+                    model = post.imgUrl,
+                    modifier = Modifier.size(100.dp, 100.dp),
+                    contentDescription = "selected image"
+                )
+            }
+
         }
     }
 }

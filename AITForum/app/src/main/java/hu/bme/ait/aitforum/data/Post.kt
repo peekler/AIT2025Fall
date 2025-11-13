@@ -5,7 +5,8 @@ data class Post(
     var author: String = "",
     var postDate: String = "",
     var postTitle: String = "",
-    var postBody: String = ""
+    var postBody: String = "",
+    var imgUrl: String = ""
 )
 
 data class PostWithId(

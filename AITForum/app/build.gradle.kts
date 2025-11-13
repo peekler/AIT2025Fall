@@ -63,10 +63,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
+
+    implementation(libs.storage.kt)
+    implementation(libs.postgrest.kt)
+    implementation(libs.gotrue.kt)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.coil.compose)
 }
