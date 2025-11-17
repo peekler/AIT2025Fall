@@ -17,12 +17,15 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.scene.rememberSceneSetupNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.ait.httpdemo.ui.navigation.MainScreenRoute
 import hu.bme.ait.httpdemo.ui.navigation.MoneyScreenRoute
 import hu.bme.ait.httpdemo.ui.navigation.NewsScreenRoute
 import hu.bme.ait.httpdemo.ui.screen.mainscreen.MainScreen
+import hu.bme.ait.httpdemo.ui.screen.moneyscreen.MoneyScreen
 import hu.bme.ait.httpdemo.ui.theme.HTTPDemoTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +63,7 @@ fun NavGraph(modifier: Modifier) {
                 )
             }
             entry<MoneyScreenRoute> {
-                //MoneyScreen()
+                MoneyScreen()
             }
             entry<NewsScreenRoute> {
                 //NewsScreen()
