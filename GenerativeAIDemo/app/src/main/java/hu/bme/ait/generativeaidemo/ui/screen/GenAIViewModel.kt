@@ -14,7 +14,7 @@ class GenAIViewModel : ViewModel() {
 
     private val genModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
-        apiKey = "AIzaSyATTL269tzgpLer5HPIqY_4FtTBjw8QLTs",
+        apiKey = "KEYHERE",
         safetySettings = listOf(
             SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.LOW_AND_ABOVE),
             SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.LOW_AND_ABOVE),

@@ -23,7 +23,7 @@ class TodoViewModel @Inject constructor(val todoDAO: TodoDAO) : ViewModel() {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
-        apiKey = "AIzaSyBewFA78jT4AJS6OzmzN8V6H6E_gU4cH5I"
+        apiKey = "KEYHERE"
     )
 
     private val _textGenerationResult = MutableStateFlow<String?>(null)
