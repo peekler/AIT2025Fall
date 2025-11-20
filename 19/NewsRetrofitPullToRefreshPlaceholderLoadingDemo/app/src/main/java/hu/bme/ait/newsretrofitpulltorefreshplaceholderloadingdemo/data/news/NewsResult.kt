@@ -13,3 +13,4 @@ data class NewsResult(
     @SerialName("totalResults")
     val totalResults: Int? = null
 )
+

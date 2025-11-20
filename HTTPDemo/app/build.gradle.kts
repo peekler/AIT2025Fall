@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +11,15 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.gradle)
 }
+
+val localProps: Properties = Properties()
+if (project.rootProject.file("key.properties").canRead()) {
+    localProps.load(FileInputStream(project.rootProject.file("key.properties")))
+} else {
+    System.err.println("key.properties file is missing, please create it.")
+}
+
+
 
 android {
     namespace = "hu.bme.ait.httpdemo"
@@ -23,6 +35,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "NEWS_API_KEY", "\"" + localProps["news.apikey"] + "\"")
+        buildConfigField("String", "NEWS_BASE_URL", "\"" + localProps["news.baseurl"] + "\"")
     }
 
     buildTypes {
@@ -43,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

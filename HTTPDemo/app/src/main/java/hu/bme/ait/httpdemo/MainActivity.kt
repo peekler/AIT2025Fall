@@ -23,7 +23,10 @@ import hu.bme.ait.httpdemo.ui.navigation.MoneyScreenRoute
 import hu.bme.ait.httpdemo.ui.navigation.NewsScreenRoute
 import hu.bme.ait.httpdemo.ui.screen.mainscreen.MainScreen
 import hu.bme.ait.httpdemo.ui.screen.moneyscreen.MoneyScreen
+import hu.bme.ait.httpdemo.ui.screen.newsscreen.NewsScreen
 import hu.bme.ait.httpdemo.ui.theme.HTTPDemoTheme
+
+// https://newsapi.org/v2/top-headlines?country=us&apiKey=YOURKEY
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -66,7 +69,7 @@ fun NavGraph(modifier: Modifier) {
                 MoneyScreen()
             }
             entry<NewsScreenRoute> {
-                //NewsScreen()
+                NewsScreen()
             }
         }
     )
