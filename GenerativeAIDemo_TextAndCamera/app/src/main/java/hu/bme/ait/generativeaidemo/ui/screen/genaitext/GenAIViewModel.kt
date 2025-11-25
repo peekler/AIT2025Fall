@@ -1,4 +1,4 @@
-package hu.bme.ait.generativeaidemo.ui.screen
+package hu.bme.ait.generativeaidemo.ui.screen.genaitext
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,6 @@ import com.google.ai.client.generativeai.type.BlockThreshold
 import com.google.ai.client.generativeai.type.HarmCategory
 import com.google.ai.client.generativeai.type.SafetySetting
 import com.google.ai.client.generativeai.type.content
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -29,8 +28,7 @@ class GenAIViewModel : ViewModel() {
     val textGenerationResult = _textGenerationResult.asStateFlow()
 
     fun generateContent(prompt: String = "Tell me the current time") {
-        _textGenerationResult.value = ""
-
+        _textGenerationResult.value = "Generating..."
         viewModelScope.launch {
             try {
                 val inputContent = content {
@@ -38,8 +36,7 @@ class GenAIViewModel : ViewModel() {
                 }
 
                 var fullResponse = ""
-                genModel.generateContentStream(inputContent).collect {
-                    chunk ->
+                genModel.generateContentStream(inputContent).collect { chunk ->
                     fullResponse += chunk.text
                     _textGenerationResult.value = fullResponse
                 }
