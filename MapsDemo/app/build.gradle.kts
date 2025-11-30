@@ -77,4 +77,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }
