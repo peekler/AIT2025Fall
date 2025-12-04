@@ -182,7 +182,7 @@ fun MyMapScreen(
                 title = "Marker AIT",
                 snippet = "Marker long text, lorem ipsum...",
                 draggable = true,
-                alpha = 0.5f
+                alpha = 0.5f,
             )
 
             for (markerPosition in viewModel.getMarkersList()) {
